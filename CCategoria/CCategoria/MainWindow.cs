@@ -12,7 +12,7 @@ public partial class MainWindow: Gtk.Window
 		Build ();
 
         //Creacion de la conexion
-		App.Instance.Connection = "server=localhost;database=bdprueba;user=root;password=sistemas";
+		App.Instance.Connection = new MySqlConnection("server=localhost;database=bdprueba;user=root;password=sistemas");
 		//connection = new MySqlConnection (connectionString);
 		App.Instance.Connection.Open();//Abre la conexion
 
