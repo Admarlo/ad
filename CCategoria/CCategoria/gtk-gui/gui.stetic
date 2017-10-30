@@ -2,10 +2,9 @@
 <stetic-interface>
   <configuration>
     <images-root-path>..</images-root-path>
-    <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <widget-library name="../../../CSerpisAd/CSerpisAd/bin/Debug/CSerpisAd.dll" />
     <widget-library name="../bin/Debug/CCategoria.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="MainWindow" design-size="400 300">
@@ -14,6 +13,21 @@
         <property name="Type">Action</property>
         <property name="Label" translatable="yes" />
         <property name="StockId">gtk-new</property>
+      </action>
+      <action id="refreshAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+        <property name="StockId">gtk-refresh</property>
+      </action>
+      <action id="deleteAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+        <property name="StockId">gtk-delete</property>
+      </action>
+      <action id="editAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+        <property name="StockId">gtk-edit</property>
       </action>
     </action-group>
     <property name="MemberName" />
@@ -25,11 +39,16 @@
         <property name="MemberName" />
         <property name="Spacing">6</property>
         <child>
-          <widget class="Gtk.Toolbar" id="toolbar2">
+          <widget class="Gtk.Toolbar" id="toolbar3">
             <property name="MemberName" />
             <property name="ShowArrow">False</property>
-            <node name="toolbar2" type="Toolbar">
+            <node name="toolbar3" type="Toolbar">
               <node type="Toolitem" action="newAction" />
+              <node type="Toolitem" action="editAction" />
+              <node type="Separator" />
+              <node type="Toolitem" action="refreshAction" />
+              <node type="Separator" />
+              <node type="Toolitem" action="deleteAction" />
             </node>
           </widget>
           <packing>
@@ -62,7 +81,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Window" id="CCategoria.CategoriaWindow" design-size="400 300">
+  <widget class="Gtk.Window" id="CCategoria.CategoriaWindow" design-size="414 141">
     <action-group name="Default">
       <action id="saveAction">
         <property name="Type">Action</property>
@@ -74,14 +93,14 @@
     <property name="Title" translatable="yes">CategoriaWindow</property>
     <property name="WindowPosition">CenterOnParent</property>
     <child>
-      <widget class="Gtk.VBox" id="vbox1">
+      <widget class="Gtk.VBox" id="vbox3">
         <property name="MemberName" />
         <property name="Spacing">6</property>
         <child>
-          <widget class="Gtk.Toolbar" id="toolbar1">
+          <widget class="Gtk.Toolbar" id="toolbar2">
             <property name="MemberName" />
             <property name="ShowArrow">False</property>
-            <node name="toolbar1" type="Toolbar">
+            <node name="toolbar2" type="Toolbar">
               <node type="Toolitem" action="saveAction" />
             </node>
           </widget>
@@ -93,7 +112,7 @@
           </packing>
         </child>
         <child>
-          <widget class="Gtk.Table" id="table1">
+          <widget class="Gtk.Table" id="table2">
             <property name="MemberName" />
             <property name="NRows">3</property>
             <property name="NColumns">3</property>
@@ -141,7 +160,7 @@
               </packing>
             </child>
             <child>
-              <widget class="Gtk.Label" id="Nombre">
+              <widget class="Gtk.Label" id="label2">
                 <property name="MemberName" />
                 <property name="LabelProp" translatable="yes">Nombre</property>
               </widget>

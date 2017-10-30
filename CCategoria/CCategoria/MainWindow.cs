@@ -1,57 +1,86 @@
-﻿using System;
-using Gtk;
+﻿using Gtk;
 using MySql.Data.MySqlClient;
+using System;
 using System.Data;
 
+using Serpis.Ad;
 using CCategoria;
 
-public partial class MainWindow: Gtk.Window
+public partial class MainWindow : Gtk.Window
 {
-	public MainWindow () : base (Gtk.WindowType.Toplevel)
-	{
-		Build ();
+    public MainWindow() : base(Gtk.WindowType.Toplevel)
+    {
+        Build();
+        Title = "Categoria";
+        deleteAction.Sensitive = false;
+        editAction.Sensitive = false;
 
-        //Creacion de la conexion
-		App.Instance.Connection = new MySqlConnection("server=localhost;database=bdprueba;user=root;password=sistemas");
-		//connection = new MySqlConnection (connectionString);
-		App.Instance.Connection.Open();//Abre la conexion
+        App.Instance.Connection = new MySqlConnection("server=localhost;database=dbprueba;user=root;password=sistemas");
+        App.Instance.Connection.Open();
 
-		//insertamos el metodo para visualizar las columnas en el treeView
-		treeView.AppendColumn("id",new CellRendererText(),"text",0);
-		treeView.AppendColumn("nombre",new CellRendererText(),"text",1);
-		ListStore listStore = new ListStore (typeof(string), typeof(string));//creamos modelo. listStore contiene los datos a mostrar, un typeof por columna, total 2 cols
+        treeView.AppendColumn("id", new CellRendererText(), "text", 0);
+        treeView.AppendColumn("nombre", new CellRendererText(), "text", 1);
+        ListStore listStore = new ListStore(typeof(string), typeof(string));
         treeView.Model = listStore;
 
-        //Introducir datos manualmente
-        //listStore.AppendValues("1","uno");
-        //listStore.AppendValues("2","dos");
+        fillListStore(listStore);
 
-        //Introducimos los datos desde la BD automaticamente
-		IDbCommand dbCommand = App.Instance.Connection.CreateCommand ();
-		dbCommand.CommandText = "select * from categoria order by id";
-        IDataReader dataReader = dbCommand.ExecuteReader ();
-
-		while(dataReader.Read())//intenta leer si puede deuelve True, sino devolvera False
-            listStore.AppendValues(dataReader["id"].ToString(),dataReader["nombre"]);
-		Console.WriteLine("id={0} nombre={1}");
-        dataReader.Close();
-
-        newAction.Activated += delegate{
-            new CategoriaWindow();
-
+        treeView.Selection.Changed += delegate {
+            bool hasSelected = treeView.Selection.CountSelectedRows() > 0;
+            deleteAction.Sensitive = hasSelected;
+            editAction.Sensitive = hasSelected;
+            //if (treeView.Selection.CountSelectedRows() > 0)
+            //    deleteAction.Sensitive = true;
+            //else
+                //deleteAction.Sensitive = false;
+        };
+        
+        newAction.Activated += delegate {
+            Categoria categoria = new Categoria();
+            new CategoriaWindow(categoria);
         };
 
-		/*listStore.AppendValues("1","cat.1");//para rellenar las filas
-		listStore.AppendValues("2","cat.2");*/
-		treeView.Model=listStore;
+        editAction.Activated += delegate {
+			object id = getId();
+            Categoria categoria = CategoriaDao.Load(id);
+            new CategoriaWindow(categoria);
+		};
 
+        refreshAction.Activated += delegate {
+            fillListStore(listStore);
+		};
 
+        deleteAction.Activated += delegate {
+            if (WindowHelper.Confirm(this, "¿Quieres eliminar el registro?")) {
+                object id = getId();
+                CategoriaDao.Delete(id);
+			}
+            
+
+        };
+    }
+
+    private object getId() {
+		TreeIter treeIter;
+		treeView.Selection.GetSelected(out treeIter);
+        return treeView.Model.GetValue(treeIter, 0);
 	}
 
-	protected void OnDeleteEvent (object sender, DeleteEventArgs a)//ejvento asociado a la X de cerrar ventana
-	{
-		App.Instance.Connection.Close();
-		Application.Quit ();
-		a.RetVal = true;
+    private void fillListStore(ListStore listStore) {
+		listStore.Clear();
+        IDbCommand dbCommnand = App.Instance.Connection.CreateCommand();
+		dbCommnand.CommandText = "select * from categoria order by id";
+        IDataReader dataReader = dbCommnand.ExecuteReader();
+		while (dataReader.Read())
+			listStore.AppendValues(dataReader["id"].ToString(), dataReader["nombre"]);
+		dataReader.Close();
 	}
+
+    protected void OnDeleteEvent(object sender, DeleteEventArgs a)
+    {
+        App.Instance.Connection.Close();
+
+        Application.Quit();
+        a.RetVal = true;
+    }
 }

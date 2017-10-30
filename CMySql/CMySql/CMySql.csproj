@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{1571118B-1A30-44F0-B2B1-B7599F7E7A4E}</ProjectGuid>
+    <ProjectGuid>{B3706D71-0585-4FA5-BA7D-79C4F16C7F1D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>CMySql</RootNamespace>
     <AssemblyName>CMySql</AssemblyName>

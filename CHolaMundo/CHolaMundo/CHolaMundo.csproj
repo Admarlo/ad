@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{0F592179-CF62-416A-95B6-375538255893}</ProjectGuid>
+    <ProjectGuid>{D4FCCDF2-F942-4FB1-A4A5-580AA2882139}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>CHolaMundo</RootNamespace>
     <AssemblyName>CHolaMundo</AssemblyName>
