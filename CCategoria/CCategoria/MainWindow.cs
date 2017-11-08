@@ -8,79 +8,73 @@ using CCategoria;
 
 public partial class MainWindow : Gtk.Window
 {
-    public MainWindow() : base(Gtk.WindowType.Toplevel)
-    {
-        Build();
-        Title = "Categoria";
-        deleteAction.Sensitive = false;
-        editAction.Sensitive = false;
+	public MainWindow() : base(Gtk.WindowType.Toplevel)
+	{
 
-        App.Instance.Connection = new MySqlConnection("server=localhost;database=dbprueba;user=root;password=sistemas");
-        App.Instance.Connection.Open();
+		Build();
+		Title = "Categoría";
 
-        treeView.AppendColumn("id", new CellRendererText(), "text", 0);
-        treeView.AppendColumn("nombre", new CellRendererText(), "text", 1);
-        ListStore listStore = new ListStore(typeof(string), typeof(string));
-        treeView.Model = listStore;
+		deleteAction.Sensitive = false;
+		editAction.Sensitive = false;
 
-        fillListStore(listStore);
+		App.Instance.Connection = new MySqlConnection("server=localhost;database=dbprueba;user=root;password=sistemas");
+		App.Instance.Connection.Open();
 
-        treeView.Selection.Changed += delegate {
-            bool hasSelected = treeView.Selection.CountSelectedRows() > 0;
-            deleteAction.Sensitive = hasSelected;
-            editAction.Sensitive = hasSelected;
-            //if (treeView.Selection.CountSelectedRows() > 0)
-            //    deleteAction.Sensitive = true;
-            //else
-                //deleteAction.Sensitive = false;
-        };
-        
-        newAction.Activated += delegate {
-            Categoria categoria = new Categoria();
-            new CategoriaWindow(categoria);
-        };
+		TreeViewHelper.Fill(treeView, CategoriaDao.SelectAll);
 
-        editAction.Activated += delegate {
+
+		treeView.Selection.Changed += delegate {
+			bool hasSelected = treeView.Selection.CountSelectedRows() > 0;
+			deleteAction.Sensitive = hasSelected;
+			editAction.Sensitive = hasSelected;
+		};
+
+		newAction.Activated += delegate {
+			Categoria categoria = new Categoria();
+			new CategoriaWindow(categoria);
+
+		};
+
+		editAction.Activated += delegate {
 			object id = getId();
-            Categoria categoria = CategoriaDao.Load(id);
-            new CategoriaWindow(categoria);
+			Categoria categoria = CategoriaDao.Load(id);
+			new CategoriaWindow(categoria);
 		};
 
-        refreshAction.Activated += delegate {
-            fillListStore(listStore);
+		refreshAction.Activated += delegate {
+			TreeViewHelper.Fill(treeView, "select * from categoria order by id");
 		};
 
-        deleteAction.Activated += delegate {
-            if (WindowHelper.Confirm(this, "¿Quieres eliminar el registro?")) {
-                object id = getId();
-                CategoriaDao.Delete(id);
+		deleteAction.Activated += delegate {
+			if (WindowHelper.Confirm(this, "¿Quieres eliminar el registro?"))
+			{
+				object id = getId();
+				CategoriaDao.Delete(id);
 			}
-            
-
-        };
-    }
-
-    private object getId() {
-		TreeIter treeIter;
-		treeView.Selection.GetSelected(out treeIter);
-        return treeView.Model.GetValue(treeIter, 0);
+		};
 	}
 
-    private void fillListStore(ListStore listStore) {
-		listStore.Clear();
-        IDbCommand dbCommnand = App.Instance.Connection.CreateCommand();
-		dbCommnand.CommandText = "select * from categoria order by id";
-        IDataReader dataReader = dbCommnand.ExecuteReader();
+	private void fillListStore(ListStore listStore)
+	{
+		IDbCommand dbCommand = App.Instance.Connection.CreateCommand();
+		dbCommand.CommandText = "select * from categoria order by id";
+		IDataReader dataReader = dbCommand.ExecuteReader();
 		while (dataReader.Read())
 			listStore.AppendValues(dataReader["id"].ToString(), dataReader["nombre"]);
 		dataReader.Close();
 	}
 
-    protected void OnDeleteEvent(object sender, DeleteEventArgs a)
-    {
-        App.Instance.Connection.Close();
+	private object getId()
+	{
+		TreeIter treeIter;
+		treeView.Selection.GetSelected(out treeIter);
+		return treeView.Model.GetValue(treeIter, 0);
+	}
 
-        Application.Quit();
-        a.RetVal = true;
-    }
+	protected void OnDeleteEvent(object sender, DeleteEventArgs a)
+	{
+		App.Instance.Connection.Close();
+		Application.Quit();
+		a.RetVal = true;
+	}
 }
