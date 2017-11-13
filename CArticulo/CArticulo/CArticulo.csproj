@@ -48,6 +48,12 @@
     </Reference>
     <Reference Include="Mono.Posix" />
     <Reference Include="System.Data" />
+    <Reference Include="CSerpisAd">
+      <HintPath>..\..\CSerpisAd\CSerpisAd\bin\Debug\CSerpisAd.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\mysql\MySql.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
