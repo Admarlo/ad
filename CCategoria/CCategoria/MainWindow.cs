@@ -64,12 +64,7 @@ public partial class MainWindow : Gtk.Window
 		dataReader.Close();
 	}
 
-	private object getId()
-	{
-		TreeIter treeIter;
-		treeView.Selection.GetSelected(out treeIter);
-		return treeView.Model.GetValue(treeIter, 0);
-	}
+	
 
 	protected void OnDeleteEvent(object sender, DeleteEventArgs a)
 	{

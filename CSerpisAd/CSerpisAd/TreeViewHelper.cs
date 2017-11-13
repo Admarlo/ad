@@ -40,4 +40,12 @@ namespace Serpis.Ad {
 			dataReader.Close();
 		}
 	}
+
+    public static object GetId(TreeView treeView)
+	{
+		TreeIter treeIter;
+		treeView.Selection.GetSelected(out treeIter);
+		return treeView.Model.GetValue(treeIter, 0);
+	}
+
 }
