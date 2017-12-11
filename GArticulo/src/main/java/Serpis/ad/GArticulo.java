@@ -1,5 +1,6 @@
 package Serpis.ad;
 
+import java.math.BigDecimal;
 import java.security.cert.PKIXRevocationChecker.Option;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,23 +11,44 @@ public class GArticulo {
 	private static Scanner scanner = new Scanner(System.in);
 	private static Connection connection;
 	public enum Option{Salir,Nuevo,Editar,Eliminar,Consultar,Listar};
+	public enum State{Vacío, Medio, Lleno}
+	
+	public static class Articulo{
+		private long id;
+		private String nombre;
+		private BigDecimal precio;
+		private long categoria;
+	}
 
 	public static void main(String[] args) {
-
-		connection = DriverManager.getConnection("jdbc:mysql://localhost/dbprueba", "root", "sistemas");
 		
+	
+		showFields(String.class);
 		
-		while(true) {
-			Option option=scanOption();
-			if(option==Option.Salir)
-				break;
-			else if(option==Option.Nuevo);
-			else if(option==Option.Editar);
-			else if(option==Option.Eliminar);
-			else if(option==Option.Consultar);
-			else//(option==Option.Listar)
-				;
-		}
+		Articulo articulo=new Articulo();
+		
+		//scan(Option.class);
+		//scan(State.class);
+		//connection = DriverManager.getConnection("jdbc:mysql://localhost/dbprueba", "root", "sistemas");
+		
+//		new Menu.add("Salir",null)
+//			.add("Nuevo", ()->nuevo())
+//			.add("Editar",()->editar())
+//			.run();
+		
+//		while(true) {
+//			Option option=scanOption();
+//			Runnable runnable=null;
+//			if(option==Option.Salir)
+//				break;
+//			else if(option==Option.Nuevo);
+//			else if(option==Option.Editar);
+//			else if(option==Option.Eliminar);
+//			else if(option==Option.Consultar);
+//			else//(option==Option.Listar)
+//				;
+//			
+//		}
 		
 //		int opcion = 0;
 //		do{
@@ -59,7 +81,34 @@ public class GArticulo {
 //					Listar();
 //			}
 //		} while(opcion!=0);
-//	}
+	}
+	private static void showfields(Class<?>type) {
+		
+	}
+	
+	
+	public static void nuevo(){
+		//TODO implantar
+	}
+	
+	
+		//GENERICO
+	public static <T extends Enum<T>> T scan(Class<T>enumType){
+		T[]constants=enumType.getEnumConstants();
+		for(int index=0;index<constants.length;index++)
+			System.out.printf("%s - %s\n",index,constants.length-1);
+		String options=String.format("^[0-%s]$", constants.length-1);
+		while (true) {
+			System.out.println("Elija una opción:");
+			String line=scanner.nextLine();
+			if(line.matches(options))
+				return constants[Integer.parseInt(line)];
+			System.out.println("Opción invalida. Vuelva a introducir");
+		}
+	
+	}
+		
+		
 	public static int scanInt(String label) {
 		while(true) {
 			try {
@@ -74,19 +123,31 @@ public class GArticulo {
 	public static Option scanOption() {
 		for(int index=0;index<Option.values().length;index++)
 			System.out.printf("%s-%s\n",index,Option.values()[index]);
-		String options=String.format("^[012345]$, args)
-	}
+		String options=String.format("^[0-%s]$", Option.values().length-1);
 		while(true) {
-			System.out.println(label);
+			System.out.println("Elija una opción:");
 			String line=scanner.nextLine();
 			if(line.matches(options))
-				return Integer.parseInt(line);
+				return Option.values()[Integer.parseInt(line)];
 			System.out.println("Opción invalida. Vuelva a introducir");
 			
 		}
 	}
 	
-	
+	public static State scanState() {
+		for(int index=0;index<State.values().length;index++)
+			System.out.printf("%s-%s\n",index,State.values()[index]);
+		String options=String.format("^[0-%s]$", State.values().length-1);
+		while(true) {
+			System.out.println("Elija una opción:");
+			String line=scanner.nextLine();
+			if(line.matches(options))
+				return State.values()[Integer.parseInt(line)];
+			System.out.println("Opción invalida. Vuelva a introducir");
+			
+		}
+	}	
 }
+	
 
 
