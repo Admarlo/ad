@@ -1,68 +1,54 @@
 package Serpis.ad;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-import Serpis.ad.GArticulo.Option;
-import Serpis.ad.GArticulo.State;
 
 public class Menu {
 
-	public static void main(String[] args) {
-
-		public static <T extends Enum<T>> T scan(Class<T>enumType){
-			T[]constants=enumType.getEnumConstants();
-			for(int index=0;index<constants.length;index++)
-				System.out.printf("%s - %s\n",index,constants.length-1);
-			String options=String.format("^[0-%s]$", constants.length-1);
-			while (true) {
-				System.out.println("Elija una opción:");
-				String line=scanner.nextLine();
-				if(line.matches(options))
-					return constants[Integer.parseInt(line)];
-				System.out.println("Opción invalida. Vuelva a introducir");
-			}
-		
+	private static Scanner scanner = new Scanner(System.in);
+	
+	private class Option{
+		public String label;
+		public Runnable runnable;
+		public Option(String label, Runnable runnable) {
+			this.label = label;
+			this.runnable = runnable;
 		}
-			
-			
-		public static int scanInt(String label) {
-			while(true) {
-				try {
-					System.out.print(label);
-					String line=scanner.nextLine();
-					return Integer.parseInt(line);
-				}catch (NumberFormatException ex) {
-					System.out.println("Debe introducir un número. Vuelva a intentarlo");
-				}
-			}
-		}
-		public static Option scanOption() {
-			for(int index=0;index<Option.values().length;index++)
-				System.out.printf("%s-%s\n",index,Option.values()[index]);
-			String options=String.format("^[0-%s]$", Option.values().length-1);
-			while(true) {
-				System.out.println("Elija una opción:");
-				String line=scanner.nextLine();
-				if(line.matches(options))
-					return Option.values()[Integer.parseInt(line)];
-				System.out.println("Opción invalida. Vuelva a introducir");
-				
-			}
-		}
-		
-		public static State scanState() {
-			for(int index=0;index<State.values().length;index++)
-				System.out.printf("%s-%s\n",index,State.values()[index]);
-			String options=String.format("^[0-%s]$", State.values().length-1);
-			while(true) {
-				System.out.println("Elija una opción:");
-				String line=scanner.nextLine();
-				if(line.matches(options))
-					return State.values()[Integer.parseInt(line)];
-				System.out.println("Opción invalida. Vuelva a introducir");
-				
-			}
 	}
+		
+	private List<Option> options = new ArrayList<>();
+		
+	public Menu () {		
+	}
+		
+	public Menu add(String label, Runnable runnable) {
+		options.add(new Option(label, runnable));
+		return this;
+	}
+	
+	public void run() {
+		while(true) {
+			Option option = scanOption();
+			if(option.runnable == null)
+				return;
+			option.runnable.run();
+		}
+	}
+		
+	private Option scanOption() {
+		String validOptions = String.format("^[0-%s]$", options.size()- 1);
+		for(int index = 0; index < options.size(); index++)
+			System.out.printf("%s - %s\n", index, options.get(index).label);
+		while (true) {
+			System.out.println("Elige opción: ");
+			String option = scanner.nextLine();
+			if(option.matches(validOptions))
+				return options.get(Integer.parseInt(option));
+			System.out.println("Opción inválida. Vuelve a introducir.");
+		}	
+		
+}
 
 }
