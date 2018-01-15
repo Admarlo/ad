@@ -13,7 +13,7 @@ public class PruebaMySql {
 		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/dbprueba", "root", "sistemas");
 		
 		Statement statement=connection.createStatement();
-		ResultSet resultSet = statement.executeQuery( "SELECT * from categoria" )
+		ResultSet resultSet = statement.executeQuery( "SELECT * from categoria" );
 			while ( resultSet.next() ) {
 			        System.out.printf( "%5s %s\n " + i + " = " + resultSet.getObject());
 			        }
