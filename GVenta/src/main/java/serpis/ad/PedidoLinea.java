@@ -3,6 +3,7 @@ package serpis.ad;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,14 +16,17 @@ public class PedidoLinea {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
+	
 	@ManyToOne
 	@JoinColumn (name = "Pedido")
 	private Pedido pedido;
-	//Muchos pedidos linea componen un pedido
-	private BigDecimal precio;
+	
+	
 	@ManyToOne
 	@JoinColumn (name = "Articulo")
 	private Articulo articulo;
+	
+	private BigDecimal precio;
 	private BigDecimal unidades;
 	private BigDecimal importe;
 	
@@ -48,6 +52,7 @@ public class PedidoLinea {
 	
 	public void setPrecio(BigDecimal precio) {
 		this.precio = precio;
+		importe=unidades.multiply(precio);
 	}
 	
 	public Articulo getArticulo() {
@@ -56,6 +61,9 @@ public class PedidoLinea {
 	
 	public void setArticulo(Articulo articulo) {
 		this.articulo = articulo;
+		precio=articulo.getPrecio();
+		unidades=new BigDecimal(1);
+		importe=unidades.multiply(precio);
 	}
 	
 	public BigDecimal getUnidades() {
@@ -64,16 +72,17 @@ public class PedidoLinea {
 	
 	public void setUnidades(BigDecimal unidades) {
 		this.unidades = unidades;
+		importe=unidades.multiply(precio);
 	}
 	
+		//NO SETTER. solución para campo calculado
+	@Column(name="importe")
 	public BigDecimal getImporte() {
-		return importe;
+		//return importe;
+		return unidades.multiply(precio);
 	}
 	
-	public void setImporte(BigDecimal importe) {
-		this.importe = importe;
-	}
-	
+		
 	@Override
 	public String toString() {
 		return String.format("[%s] %s %s %s€ %s %s€", id, pedido, articulo, precio, unidades,  importe);
