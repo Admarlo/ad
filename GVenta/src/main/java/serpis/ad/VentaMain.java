@@ -11,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
+
 public class VentaMain {
 	private static EntityManagerFactory entityManagerFactory; 
 	 
@@ -62,6 +64,15 @@ public class VentaMain {
                     case 7:
                     	newArticulo();
                         break;
+                    case 8:
+                    	newCategoria();
+                        break;
+                    case 9:
+                    	newCliente();
+                        break;
+                    case 10:
+                    	newPedido();
+                        break;
                     default:
                         System.out.println("No ha introducido un numero del menú");
                 }
@@ -99,5 +110,47 @@ public class VentaMain {
 		entityManager.getTransaction().commit();
 		
 }
+	
+	public static void newCategoria(){
+		Categoria categoria = new Categoria();
+		categoria.setNombre("Categoria " + Math.floor(Math.random()*10+1));
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist(categoria);
+		entityManager.getTransaction().commit();
+	}
+	
+	public static void newCliente() {
+		Cliente Cliente = new Cliente();
+		Cliente.setNombre("Cliente " + Math.floor(Math.random()*10+1));
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist(Cliente);
+		entityManager.getTransaction().commit();
+	}
+	
+	public static void newPedido() {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		Pedido pedido = new Pedido();
+		Cliente cliente = entityManager.getReference(Cliente.class, 1L);
+		pedido.setCliente(cliente);
+		PedidoLinea pedidoLinea1 = new PedidoLinea();
+		pedido.add(pedidoLinea1);
+//		//0j0 las dos sentencias siguientes mantienen sincronizada la asociación
+//		pedido.getPedidoLineas().add(pedidoLinea1);
+//		pedidoLinea1.setPedido(pedido);
+		Articulo articulo = entityManager.getReference(Articulo.class, 1L);
+		pedidoLinea1.setArticulo(articulo);
+		
+		entityManager.persist(pedido);
+		entityManager.getTransaction().commit();
+		
+		/*for(PedidoLinea pedidoLinea : pedido.getPedidoLinea())
+			System.out.println(pedidoLinea);*/
+}
+//	private static void CalcularImporte(unidades, precio){
+//		importe=unidades.multiply(precio);
+//	}
 	
 }

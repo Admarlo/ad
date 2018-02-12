@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
+@Entity(name="Articulo")
 public class Articulo {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -20,12 +20,13 @@ public class Articulo {
 	@JoinColumn (name = "Categoria")
 	private Categoria categoria;
 	
-	public void setId(long id) {
-		this.id = id;
-	}
-	
+		
 	public long getId() {
 		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	public String getNombre() {

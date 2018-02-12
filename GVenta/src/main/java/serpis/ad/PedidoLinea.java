@@ -10,8 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 
-@Entity
+@Entity(name="PedidoLinea")
 public class PedidoLinea {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -30,14 +31,15 @@ public class PedidoLinea {
 	private BigDecimal unidades;
 	private BigDecimal importe;
 	
-	public void setId(long id) {
-		this.id = id;
-	}
-	
 	public long getId() {
 		return id;
 	}
 	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+		
 	public Pedido getPedido() {
 		return pedido;
 	}
@@ -75,11 +77,15 @@ public class PedidoLinea {
 		importe=unidades.multiply(precio);
 	}
 	
-		//NO SETTER. solución para campo calculado
-	@Column(name="importe")
-	public BigDecimal getImporte() {
-		//return importe;
-		return unidades.multiply(precio);
+		//SIN SETTER. solución para campo calculado
+//	@Column(name="importe")
+//	public BigDecimal getImporte() {
+//		return unidades.multiply(precio);
+//	}
+	
+	@PrePersist
+	private void prePersist() {
+		importe=unidades.multiply(precio);
 	}
 	
 		
